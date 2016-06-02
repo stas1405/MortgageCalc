@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace PaymentCalc.Tests
 {
-    public class BaseClassForCalc:BaseTestClass
+    public class BaseTestClassForCalc:BaseTestClass
     {
         [SetUp]
         public void Load()
         {
             MortgagePage.GoTo();
+            // Refactor: CalcPage.GoTo() instead of MortgagePage.NavigateToPaymentCalculator();
             MortgagePage.NavigateToPaymentCalculator();
 
         }

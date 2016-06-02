@@ -12,11 +12,8 @@ namespace PaymentCalc.Navigation
     {
         public static void Select(string topLevelMenu, string subMenuLink)
         {
-            var loans = Driver.Instance.FindElement(By.CssSelector("a[data-utag-name= " + topLevelMenu + "]"));
-            loans.Click();
-            var mortgage = Driver.Instance.FindElement(By.CssSelector("a[data-utag-name= " + subMenuLink + "]"));
-            mortgage.Click();
-            
+            Driver.Instance.FindElement(By.CssSelector("a[data-utag-name= " + topLevelMenu + "]")).Click();
+            Driver.Instance.FindElement(By.CssSelector("a[data-utag-name= " + subMenuLink + "]")).Click();
         }
     }
 }

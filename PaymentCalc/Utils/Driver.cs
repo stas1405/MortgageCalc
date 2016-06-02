@@ -1,11 +1,13 @@
 ﻿
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 namespace PaymentCalc
 {
+    //Singlton instance
     public class Driver
     {
-        public static ChromeDriver Instance { get; set; }
+        public static IWebDriver Instance { get; set; }
 
         public static string MainPage
         {
@@ -14,7 +16,7 @@ namespace PaymentCalc
                 return "https://ia.ca/individuals";
             }
         }
-
+        //Refactor: for each browser create own Initialize method(InitializeFireFox, InitializeChtome, etc)
         public static void Initialize()
         {
             Instance = new ChromeDriver();

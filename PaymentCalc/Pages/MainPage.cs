@@ -12,8 +12,11 @@ namespace PaymentCalc
         public static void GoTo()
         {
            Driver.Instance.Navigate().GoToUrl(Driver.MainPage);
-         //   var alert = Driver.Instance.FindElement(By.ClassName("icone-tuile-x"));
-         //   alert.Click();
+            var alert = Driver.Instance.FindElement(By.Id("alerteFermer"));
+            if (alert != null)
+            {
+                alert.Click();
+            }
         }
 
         public static string CheckLanguage()

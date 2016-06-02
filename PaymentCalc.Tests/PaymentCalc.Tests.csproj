@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClassForCalc.cs" />
+    <Compile Include="BaseTestClassForCalc.cs" />
     <Compile Include="BaseTestClass.cs" />
     <Compile Include="TestByMortgageAmount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

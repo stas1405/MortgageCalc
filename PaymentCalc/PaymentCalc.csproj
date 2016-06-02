@@ -54,8 +54,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action.cs" />
-    <Compile Include="Driver.cs" />
+    <Compile Include="Utils\Action.cs" />
+    <Compile Include="Utils\Driver.cs" />
     <Compile Include="Navigation\MenuSelector.cs" />
     <Compile Include="Navigation\TopNavigation.cs" />
     <Compile Include="Pages\CalcPage.cs" />

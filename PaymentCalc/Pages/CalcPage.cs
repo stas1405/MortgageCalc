@@ -5,6 +5,7 @@ using System;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.IO;
+using System.Text;
 
 namespace PaymentCalc
 {
@@ -17,7 +18,7 @@ namespace PaymentCalc
             Action.Instance.MoveToElement(slider).ClickAndHold().MoveByOffset(0, step).Release().Perform();
         }
 
-        public static int CheckPurchasePrice()
+        public static int CheckPurchasedPrice()
         {
             return int.Parse(Driver.Instance.FindElement(By.Id("PrixPropriete")).GetAttribute("value"));
         }
@@ -53,17 +54,17 @@ namespace PaymentCalc
             return new CalcByPrice();
         }
 
+        //Calculates mortgage when Mortgage amount radio-btn is selected.
+        public static CalcByMortgage CalcByMortgage()
+        {
+            return new CalcByMortgage();
+        }
+
         public static void DownloadPDFwithResults()
         {
             Driver.Instance.FindElement(By.Id("imprimer")).Click();
             WebDriverWait waitObj = new WebDriverWait(Driver.Instance, TimeSpan.FromSeconds(5));
             waitObj.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("*[class^='loadingGif']")));
-        }
-
-        //Calculates mortgage when Mortgage amount radio-btn is selected.
-        public static CalcByMorgage CalcByMortgage()
-        {
-            return new CalcByMorgage();
         }
 
         public static string ParsePdf()
@@ -75,8 +76,8 @@ namespace PaymentCalc
             Console.WriteLine("File length:" + reader.FileLength);
             Console.WriteLine("No. Of pages" + reader.NumberOfPages);
 
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            ITextExtractionStrategy its = new iTextSharp.text.pdf.parser.SimpleTextExtractionStrategy();
+            StringBuilder sb = new StringBuilder();
+            ITextExtractionStrategy its = new SimpleTextExtractionStrategy();
 
             int i =  reader.NumberOfPages;         
             sb.Clear();
@@ -93,14 +94,14 @@ namespace PaymentCalc
             {
                 Console.WriteLine("Exception Occured while reading PDF File....!");
             }
-
+            File.Delete(path);
             return tokens[11];
         }
     }
     
 
     //This is a class, wich describes functionality of calculator, when Mortgage amount radio-btn is selected
-    public class CalcByMorgage
+    public class CalcByMortgage
     {
         private string mortgageAmount;
         private string rate;
@@ -108,31 +109,31 @@ namespace PaymentCalc
         private string freq;
         private string purchasePrice;
 
-        public CalcByMorgage WithMortgageAmount(string mortgageAmount)
+        public CalcByMortgage WithMortgageAmount(string mortgageAmount)
         {
             this.mortgageAmount = mortgageAmount;
             return this;
         }
 
-        public CalcByMorgage WithRate(string rate)
+        public CalcByMortgage WithRate(string rate)
         {
             this.rate = rate;
             return this;
         }
 
-        public CalcByMorgage WithAmortization(string amortization)
+        public CalcByMortgage WithAmortization(string amortization)
         {
             this.amortization = amortization;
             return this;
         }
 
-        public CalcByMorgage WithFrequency(string freq)
+        public CalcByMortgage WithFrequency(string freq)
         {
             this.freq = freq;
             return this;
         }
 
-        public CalcByMorgage SetPurchasePriceWithBtn(string purchasePrice)
+        public CalcByMortgage SetPurchasePriceWithBtn(string purchasePrice)
         {
             this.purchasePrice = purchasePrice;
             return this;
@@ -153,7 +154,7 @@ namespace PaymentCalc
 
             var selectAmort = Driver.Instance.FindElement(By.Id("Amortissement"));
             var selectElementAmort = new SelectElement(selectAmort);
-            selectElementAmort.SelectByText(amortization);
+            selectElementAmort.SelectByValue(amortization);
 
             var selectFreq = Driver.Instance.FindElement(By.Id("FrequenceVersement"));
             var selectElementFreq = new SelectElement(selectFreq);
@@ -162,7 +163,8 @@ namespace PaymentCalc
             var submit = Driver.Instance.FindElement(By.Id("btn_calculer"));
             submit.Click();
 
-            WebDriverWait waitObj = new WebDriverWait(Driver.Instance, TimeSpan.FromSeconds(5));
+            //Refactor: create a method wait() in Driver class
+            WebDriverWait waitObj = new WebDriverWait(Driver.Instance, TimeSpan.FromSeconds(15));
             waitObj.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("*[class^='loadingGif']")));
 
         }
@@ -198,6 +200,7 @@ namespace PaymentCalc
 
         public CalcByPrice WithFrequency(string freq)
         {
+            // if freq == "weekly" or freq== "Hebdomadaire"  , than freq = "52" and so on
             this.freq = freq;
             return this;
         }
@@ -218,7 +221,7 @@ namespace PaymentCalc
         {          
             for(int i = 0; i < 5; i++)
             {
-                int price = CalcPage.CheckPurchasePrice();
+                int price = CalcPage.CheckPurchasedPrice();
                 if (price < int.Parse(purchasePrice))
                 {
                     var plusBtn = Driver.Instance.FindElement(By.Id("PrixProprietePlus"));
@@ -260,7 +263,7 @@ namespace PaymentCalc
 
             var selectAmort = Driver.Instance.FindElement(By.Id("Amortissement"));
             var selectElementAmort = new SelectElement(selectAmort);
-            selectElementAmort.SelectByText(amortization);
+            selectElementAmort.SelectByValue(amortization); //.SelectByText(amortization);
 
             var selectFreq = Driver.Instance.FindElement(By.Id("FrequenceVersement"));
             var selectElementFreq = new SelectElement(selectFreq);
@@ -269,7 +272,8 @@ namespace PaymentCalc
             var submit = Driver.Instance.FindElement(By.Id("btn_calculer"));
             submit.Click();
 
-            WebDriverWait waitObj = new WebDriverWait(Driver.Instance, TimeSpan.FromSeconds(5));
+            //Refactor: create a method wait() in Driver class
+            WebDriverWait waitObj = new WebDriverWait(Driver.Instance, TimeSpan.FromSeconds(15));
             waitObj.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("*[class^='loadingGif']")));
 
         }
